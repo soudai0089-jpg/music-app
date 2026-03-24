@@ -1,6 +1,8 @@
 export type Track = {
+  id: string;
   title: string;
   artist: string;
+  coverUrl?: string;
 };
 
 export type Temperature = "hot" | "warm" | "cool";
