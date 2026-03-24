@@ -1,8 +1,3 @@
 export default function Page() {
-  return (
-    <div>
-      Picks Page
-    </div>
-  );
+  return <div>Picks Page</div>;
 }
- 
