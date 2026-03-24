@@ -2,66 +2,79 @@
 
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { loadMe, saveMe } from "../../lib/storage";
 
-const questions = [
-  "夜に音楽を聴くことが多い？",
-  "最近静かな曲が多い？",
-  "同じ曲を繰り返し聴く？",
-  "プレイリストは自分で作る？",
-];
+function loadMe() {
+  const raw = localStorage.getItem("music-app-me");
+  if (!raw) {
+    return {
+      id: "me",
+      username: "you",
+    };
+  }
+  return JSON.parse(raw);
+}
+
+function saveMe(me: any) {
+  localStorage.setItem("music-app-me", JSON.stringify(me));
+}
 
 function typeFromScore(score: number) {
-  if (score >= 3) return "Night Listener";
-  if (score === 2) return "Mood Drifter";
-  return "Energy Hopper";
+  if (score >= 80) return "Night Listener";
+  if (score >= 60) return "Mood Diver";
+  if (score >= 40) return "Replay Addict";
+  return "Casual Explorer";
 }
 
 export default function DiagnosePage() {
-  const [step, setStep] = useState(0);
-  const [score, setScore] = useState(0);
   const router = useRouter();
+  const [score, setScore] = useState(50);
 
-  const answer = (yes: boolean) => {
-    const nextScore = score + (yes ? 1 : 0);
-    if (step < questions.length - 1) {
-      setScore(nextScore);
-      setStep(step + 1);
-      return;
-    }
-    // 保存してプロフィールへ
-    const me = loadMe();
-    me.diagnosis = { type: typeFromScore(nextScore), score: nextScore };
+  const handleSave = () => {
+    const nextScore = Number(score);
+    const me: any = loadMe();
+
+    me.diagnosis = {
+      type: typeFromScore(nextScore),
+      score: nextScore,
+    };
+
     saveMe(me);
     router.push("/profile");
   };
 
   return (
-    <div className="min-h-screen bg-[#0B0F14] text-white flex flex-col items-center justify-center px-6">
-      <h1 className="text-2xl font-bold mb-2">🎧 音楽人格ミニ診断</h1>
-      <p className="text-sm text-white/60 mb-8">30秒であなたのタイプが分かる</p>
+    <main className="min-h-screen bg-black text-white px-4 py-8">
+      <div className="mx-auto max-w-md">
+        <h1 className="text-2xl font-bold">音楽タイプ診断</h1>
+        <p className="mt-2 text-sm text-white/60">
+          スコアを決めてプロフィールに保存します
+        </p>
 
-      <div className="bg-[#151A22] p-6 rounded-2xl w-full max-w-md border border-white/10">
-        <p className="mb-6 text-lg">{questions[step]}</p>
+        <div className="mt-8 rounded-2xl border border-white/10 bg-white/5 p-5">
+          <div className="text-sm text-white/70">診断スコア</div>
 
-        <div className="flex gap-3">
-          <button onClick={() => answer(true)} className="flex-1 bg-green-500 py-2 rounded-xl font-semibold">
-            はい
-          </button>
-          <button onClick={() => answer(false)} className="flex-1 bg-white/10 py-2 rounded-xl">
-            いいえ
-          </button>
-        </div>
-      </div>
-
-      <div className="mt-6 w-full max-w-md">
-        <div className="bg-white/10 h-2 rounded-full">
-          <div
-            className="bg-green-500 h-2 rounded-full"
-            style={{ width: `${((step + 1) / questions.length) * 100}%` }}
+          <input
+            type="range"
+            min={0}
+            max={100}
+            value={score}
+            onChange={(e) => setScore(Number(e.target.value))}
+            className="mt-4 w-full"
           />
+
+          <div className="mt-4 text-3xl font-bold">{score}</div>
+          <div className="mt-2 text-lg text-green-400">
+            {typeFromScore(score)}
+          </div>
+
+          <button
+            onClick={handleSave}
+            className="mt-6 w-full rounded-xl bg-green-500 py-3 font-semibold text-black"
+          >
+            診断結果を保存する
+          </button>
         </div>
       </div>
-    </div>
+    </main>
   );
 }
