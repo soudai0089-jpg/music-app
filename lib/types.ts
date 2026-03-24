@@ -6,22 +6,17 @@ export type Track = {
   previewUrl?: string;
 };
 
-export type Temperature = "hot" | "warm" | "cool";
-
 export type UserProfile = {
   id: string;
   username: string;
   avatar?: string;
-
   moodSong: Track;
   nowSong?: Track;
   picks?: Track[];
-
   diagnosis?: {
     type: string;
     score: number;
   };
-
   nowSongUpdatedAt?: string;
   hallOfFame?: string;
   recentTop10?: Track[];
@@ -31,4 +26,6 @@ export type AppData = {
   me: UserProfile;
   friends: UserProfile[];
   recommended?: Track[];
+  viewedStoryIds?: string[];
+  followingIds?: string[];
 };
