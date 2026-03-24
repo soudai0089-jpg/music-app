@@ -1,50 +1,68 @@
 "use client";
 
+import Link from "next/link";
 import { useEffect, useState } from "react";
+import AppHeader from "../components/AppHeader";
+import BottomNav from "../components/BottomNav";
+import { getAppData, initData } from "../lib/store";
 
-type Track = {
-  id: string;
-  title: string;
-  artist: string;
-};
-
-function ReelCard({ track }: { track: Track }) {
-  return (
-    <div className="h-full flex flex-col justify-center items-center bg-black text-white">
-      <div className="text-xl font-bold">{track.title}</div>
-      <div className="text-sm opacity-70">{track.artist}</div>
-    </div>
-  );
-}
-
-export default function Page() {
-  const [data, setData] = useState<{ recommended: Track[] }>({
-    recommended: [],
-  });
+export default function HomePage() {
+  const [data, setData] = useState<any | null>(null);
 
   useEffect(() => {
-    // 仮データ（あとでAPIに変える）
-    setData({
-      recommended: [
-        { id: "1", title: "言って。", artist: "ヨルシカ" },
-        { id: "2", title: "晴る", artist: "ヨルシカ" },
-        { id: "3", title: "Ref:rain", artist: "Aimer" },
-      ],
-    });
+    initData();
+    const next = getAppData();
+    setData(next);
   }, []);
 
+  if (!data) {
+    return (
+      <main className="min-h-screen bg-[#0B0F14] text-white flex items-center justify-center">
+        読み込み中...
+      </main>
+    );
+  }
+
   return (
-    <div className="h-screen overflow-y-scroll snap-y snap-mandatory bg-black">
-      <div className="space-y-0">
-        {data.recommended.map((track: any) => (
-          <div
-            key={track.id}
-            className="h-[calc(100vh-170px)] snap-start"
-          >
-            <ReelCard track={track} />
+    <main className="min-h-screen bg-[#0B0F14] text-white pb-28">
+      <AppHeader />
+
+      <div className="mx-auto max-w-md px-4 pt-6">
+        <Link href="/profile">
+          <div className="mb-6 flex items-center gap-3 rounded-2xl border border-white/10 bg-[#151A22] p-4">
+            <div className="flex h-12 w-12 items-center justify-center rounded-full bg-white/10 text-xl">
+              {data.me.avatar}
+            </div>
+            <div>
+              <div className="font-semibold">{data.me.username}</div>
+              <div className="text-xs text-white/60">プロフィールを見る</div>
+            </div>
           </div>
-        ))}
+        </Link>
+
+        <div className="mb-4 text-lg font-semibold">友達の「今の一曲」</div>
+
+        <div className="space-y-3">
+          {data.friends.map((f: any) => (
+            <Link key={f.id} href={`/u/${f.id}`}>
+              <div className="flex items-center gap-3 rounded-2xl border border-white/10 bg-[#151A22] p-3">
+                <div className="flex h-12 w-12 items-center justify-center rounded-full bg-white/10 text-lg">
+                  {f.avatar}
+                </div>
+
+                <div className="min-w-0 flex-1">
+                  <div className="truncate font-semibold">{f.moodSong.title}</div>
+                  <div className="truncate text-sm text-white/60">
+                    {f.moodSong.artist}
+                  </div>
+                </div>
+              </div>
+            </Link>
+          ))}
+        </div>
       </div>
-    </div>
+
+      <BottomNav />
+    </main>
   );
 }
