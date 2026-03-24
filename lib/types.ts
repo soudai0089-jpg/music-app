@@ -3,6 +3,7 @@ export type Track = {
   title: string;
   artist: string;
   coverUrl?: string;
+  previewUrl?: string;
 };
 
 export type Temperature = "hot" | "warm" | "cool";
@@ -10,6 +11,24 @@ export type Temperature = "hot" | "warm" | "cool";
 export type UserProfile = {
   id: string;
   username: string;
+  avatar?: string;
 
-  picks?: Track[]; // ←これ追加（超重要）
+  moodSong: Track;
+  nowSong?: Track;
+  picks?: Track[];
+
+  diagnosis?: {
+    type: string;
+    score: number;
+  };
+
+  nowSongUpdatedAt?: string;
+  hallOfFame?: string;
+  recentTop10?: Track[];
+};
+
+export type AppData = {
+  me: UserProfile;
+  friends: UserProfile[];
+  recommended?: Track[];
 };

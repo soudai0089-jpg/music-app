@@ -20,14 +20,21 @@ export default function FriendPage() {
     );
   }
 
+  const safeMoodSong = user.moodSong || {
+    id: "fallback",
+    title: "未設定",
+    artist: "No Artist",
+    coverUrl: "",
+  };
+
   return (
     <main className="min-h-screen bg-[#0B0F14] text-white pb-28">
       <AppHeader />
 
       <div className="mx-auto max-w-md px-4 pt-6">
         <div className="flex flex-col items-center">
-          <div className="h-20 w-20 rounded-full bg-white/10 flex items-center justify-center text-2xl">
-            {user.avatar}
+          <div className="flex h-20 w-20 items-center justify-center rounded-full bg-white/10 text-2xl">
+            {user.avatar || "👤"}
           </div>
           <div className="mt-3 text-xl font-bold">{user.username}</div>
           <div className="mt-1 text-sm text-white/60">@{user.id}</div>
@@ -38,14 +45,18 @@ export default function FriendPage() {
 
           <div className="mt-4 flex gap-4">
             <img
-              src={user.moodSong.coverUrl}
-              alt={user.moodSong.title}
+              src={safeMoodSong.coverUrl || ""}
+              alt={safeMoodSong.title}
               className="h-24 w-24 rounded-2xl object-cover"
             />
 
             <div className="min-w-0 flex-1">
-              <div className="text-lg font-semibold truncate">{user.moodSong.title}</div>
-              <div className="text-sm text-white/70 truncate">{user.moodSong.artist}</div>
+              <div className="truncate text-lg font-semibold">
+                {safeMoodSong.title}
+              </div>
+              <div className="truncate text-sm text-white/70">
+                {safeMoodSong.artist}
+              </div>
             </div>
           </div>
         </div>
