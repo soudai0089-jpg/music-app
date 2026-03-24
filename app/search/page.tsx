@@ -1,15 +1,17 @@
 "use client";
 
-import { useMemo, useState } from "react";
 import Link from "next/link";
+import { useMemo, useState } from "react";
+
+type MoodSong = {
+  title: string;
+  artist: string;
+};
 
 type Friend = {
   id: string;
   username: string;
-  moodSong?: {
-    title: string;
-    artist: string;
-  };
+  moodSong?: MoodSong;
 };
 
 type AppData = {
@@ -22,6 +24,7 @@ function getAppData(): AppData {
   }
 
   const raw = localStorage.getItem("music-app-data");
+
   if (!raw) {
     return {
       friends: [
@@ -62,7 +65,7 @@ export default function SearchPage() {
     if (!keyword) return data.friends;
 
     return data.friends.filter(
-      (user: any) =>
+      (user: Friend) =>
         user.id.toLowerCase().includes(keyword) ||
         user.username.toLowerCase().includes(keyword)
     );
@@ -86,7 +89,7 @@ export default function SearchPage() {
         />
 
         <div className="mt-6 space-y-3">
-          {filtered.map((user: any) => (
+          {filtered.map((user: Friend) => (
             <Link
               key={user.id}
               href={`/u/${user.id}`}
