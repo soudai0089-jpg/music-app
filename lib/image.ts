@@ -1,4 +1,4 @@
-import { CompatibilityResult, UserProfile } from "./types";
+import { UserProfile } from "./types";
 
 export function renderShareCardPNG(opts: {
   title: string;
