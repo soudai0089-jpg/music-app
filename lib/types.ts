@@ -1,22 +1,13 @@
 export type Track = {
-  id: string;
   title: string;
   artist: string;
-  coverUrl: string;
-  previewUrl: string;
 };
+
+export type Temperature = "hot" | "warm" | "cool";
 
 export type UserProfile = {
   id: string;
   username: string;
-  avatar: string;
-  moodSong: Track;
-};
 
-export type AppData = {
-  me: UserProfile;
-  friends: UserProfile[];
-  recommended: (Track & { moodText: string })[];
-  viewedStoryIds: string[];
-  followingIds: string[];
+  picks?: Track[]; // ←これ追加（超重要）
 };
