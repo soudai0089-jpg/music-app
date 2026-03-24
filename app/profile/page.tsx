@@ -11,7 +11,7 @@ export default function ProfilePage() {
   const recentBest5 = data.recommended.slice(0, 5);
   const selectedBest5 = [
     me.moodSong,
-    ...data.friends.map((f) => f.moodSong),
+    ...data.friends.map((f: any) => f.moodSong),
   ].slice(0, 5);
 
   return (
@@ -74,7 +74,7 @@ export default function ProfilePage() {
           <div className="text-lg font-semibold mb-4">直近ベスト5</div>
 
           <div className="space-y-3">
-            {recentBest5.map((track, i) => (
+            {recentBest5.map((track: any, i: number) => (
               <div
                 key={track.id}
                 className="flex items-center gap-3 rounded-2xl border border-white/10 bg-[#151A22] p-3"
