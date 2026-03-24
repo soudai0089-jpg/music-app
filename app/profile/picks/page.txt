@@ -1,0 +1,18 @@
+export default function PicksPage() {
+  return (
+    <main className="min-h-screen bg-slate-950 text-white p-6">
+      <h1 className="text-2xl font-bold mb-4">自選ベスト30</h1>
+
+      <div className="grid grid-cols-3 gap-3">
+        {Array.from({ length: 30 }).map((_, i) => (
+          <div
+            key={i}
+            className="aspect-square bg-slate-700 rounded-xl flex items-center justify-center text-sm"
+          >
+            Pick {i + 1}
+          </div>
+        ))}
+      </div>
+    </main>
+  );
+}
