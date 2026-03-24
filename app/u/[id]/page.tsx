@@ -8,7 +8,7 @@ import { getAppData } from "../../../lib/store";
 export default function FriendPage() {
   const params = useParams<{ id: string }>();
   const data = getAppData();
-  const user = data.friends.find((f) => f.id === params.id);
+  const user = data.friends.find((f: any) => f.id === params.id);
 
   if (!user) {
     return (
