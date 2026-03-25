@@ -28,11 +28,13 @@ export default function CallbackPage() {
           return;
         }
 
+        const redirectUri = window.location.origin + "/callback";
+
         const body = new URLSearchParams({
           client_id: clientId,
           grant_type: "authorization_code",
           code,
-          redirect_uri: "https://music-app-nine-mauve.vercel.app/callback",
+          redirect_uri: redirectUri,
           code_verifier: verifier,
         });
 
@@ -48,6 +50,7 @@ export default function CallbackPage() {
 
         if (data.access_token) {
           localStorage.setItem("spotify_access_token", data.access_token);
+          localStorage.removeItem("spotify_code_verifier");
           window.location.href = "/post";
         } else {
           alert(JSON.stringify(data));
