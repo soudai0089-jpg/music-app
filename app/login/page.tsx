@@ -26,7 +26,7 @@ function base64urlencode(input: ArrayBuffer) {
 export default function LoginPage() {
   const handleLogin = async () => {
     const clientId = process.env.NEXT_PUBLIC_SPOTIFY_CLIENT_ID;
-    const redirectUri = "http://127.0.0.1:3000/callback";
+    const redirectUri = "https://music-app-nine-mauve.vercel.app/callback";
 
     if (!clientId) {
       alert("NEXT_PUBLIC_SPOTIFY_CLIENT_ID がありません");
