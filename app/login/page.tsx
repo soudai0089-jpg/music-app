@@ -1,18 +1,20 @@
 "use client";
 
 function generateRandomString(length: number) {
-  const possible =
+  const chars =
     "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-  let text = "";
+  let result = "";
+  const randomValues = crypto.getRandomValues(new Uint8Array(length));
+
   for (let i = 0; i < length; i++) {
-    text += possible.charAt(Math.floor(Math.random() * possible.length));
+    result += chars[randomValues[i] % chars.length];
   }
-  return text;
+
+  return result;
 }
 
 async function sha256(plain: string) {
-  const encoder = new TextEncoder();
-  const data = encoder.encode(plain);
+  const data = new TextEncoder().encode(plain);
   return window.crypto.subtle.digest("SHA-256", data);
 }
 
@@ -48,7 +50,6 @@ export default function LoginPage() {
       code_challenge_method: "S256",
       code_challenge: challenge,
       scope,
-      show_dialog: "true",
     });
 
     window.location.href =
@@ -57,15 +58,15 @@ export default function LoginPage() {
 
   return (
     <main className="min-h-screen bg-[#0B0F14] text-white flex items-center justify-center px-6">
-      <div className="rounded-3xl border border-white/10 bg-[#151A22] p-6 w-full max-w-sm">
+      <div className="w-full max-w-sm rounded-3xl border border-white/10 bg-[#151A22] p-6">
         <h1 className="text-2xl font-bold">Spotifyログイン</h1>
-        <p className="text-sm text-white/60 mt-2">
-          曲検索やジャケット取得のために接続します
+        <p className="mt-2 text-sm text-white/60">
+          Spotifyと連携して曲を検索します
         </p>
 
         <button
           onClick={handleLogin}
-          className="mt-6 w-full rounded-full bg-green-500 py-3 text-black font-semibold"
+          className="mt-6 flex w-full items-center justify-center rounded-full bg-green-500 py-3 font-semibold text-black"
         >
           Spotifyでログイン
         </button>
