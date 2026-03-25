@@ -29,3 +29,4 @@ export type AppData = {
   viewedStoryIds?: string[];
   followingIds?: string[];
 };
+

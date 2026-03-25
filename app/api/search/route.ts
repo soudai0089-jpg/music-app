@@ -40,7 +40,7 @@ export async function GET(req: Request) {
     coverUrl:
       item.album?.images?.[0]?.url ||
       "https://placehold.co/300x300/png?text=No+Image",
-    previewUrl: item.preview_url || "/demo.mp3",
+    previewUrl: item.preview_url || "",
   }));
 
   return NextResponse.json(tracks);
