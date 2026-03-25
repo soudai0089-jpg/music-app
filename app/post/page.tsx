@@ -58,8 +58,16 @@ export default function PostPage() {
       <div className="mx-auto max-w-md px-4 pt-6">
         <h1 className="text-xl font-bold">曲を検索</h1>
         <p className="mt-2 text-sm text-white/60">
-          Spotifyから曲を探して、今の音楽に設定する
+          Spotifyから曲を探して設定
         </p>
+
+        {/* 🔥 ログインボタン */}
+        <a
+          href="/login"
+          className="mt-4 inline-flex rounded-full bg-green-500 px-4 py-2 font-semibold text-black"
+        >
+          Spotifyログインへ
+        </a>
 
         <input
           value={keyword}
@@ -75,9 +83,9 @@ export default function PostPage() {
           検索
         </button>
 
-        {error ? (
+        {error && (
           <div className="mt-3 text-sm text-red-400">{error}</div>
-        ) : null}
+        )}
 
         <div className="mt-5 space-y-3">
           {results.map((track: any) => (
@@ -87,13 +95,15 @@ export default function PostPage() {
               className="flex w-full items-center gap-3 rounded-2xl border border-white/10 bg-[#151A22] p-3 text-left"
             >
               <img
-                src={track.coverUrl || ""}
+                src={track.coverUrl}
                 alt={track.title}
                 className="h-14 w-14 rounded-xl object-cover"
               />
 
               <div className="min-w-0 flex-1">
-                <div className="truncate font-semibold">{track.title}</div>
+                <div className="truncate font-semibold">
+                  {track.title}
+                </div>
                 <div className="truncate text-sm text-white/60">
                   {track.artist}
                 </div>
