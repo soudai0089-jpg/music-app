@@ -28,7 +28,7 @@ export default function CallbackPage() {
           return;
         }
 
-        const redirectUri = window.location.origin + "/callback";
+        const redirectUri = "https://music-app-nine-mauve.vercel.app/callback";
 
         const body = new URLSearchParams({
           client_id: clientId,

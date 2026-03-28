@@ -9,6 +9,7 @@ export default function PostPage() {
   const [keyword, setKeyword] = useState("");
   const [results, setResults] = useState<any[]>([]);
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const search = async () => {
     setError("");
@@ -21,20 +22,33 @@ export default function PostPage() {
       return;
     }
 
-    const res = await fetch(`/api/search?q=${encodeURIComponent(keyword)}`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
-
-    const data = await res.json();
-
-    if (!res.ok) {
-      setError(data.error || "検索に失敗しました");
+    if (!keyword.trim()) {
+      setError("検索ワードを入れてください");
       return;
     }
 
-    setResults(data);
+    setLoading(true);
+
+    try {
+      const res = await fetch(`/api/search?q=${encodeURIComponent(keyword)}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        setError(data.error || "検索に失敗しました");
+        return;
+      }
+
+      setResults(data);
+    } catch (e: any) {
+      setError("検索中にエラーが起きました");
+    } finally {
+      setLoading(false);
+    }
   };
 
   const setMoodSong = (track: any) => {
@@ -49,6 +63,7 @@ export default function PostPage() {
 
     saveAppData(data);
     alert("今の音楽に設定しました");
+    window.location.href = "/profile";
   };
 
   return (
@@ -58,10 +73,9 @@ export default function PostPage() {
       <div className="mx-auto max-w-md px-4 pt-6">
         <h1 className="text-xl font-bold">曲を検索</h1>
         <p className="mt-2 text-sm text-white/60">
-          Spotifyから曲を探して設定
+          Spotifyから曲を探して、今の音楽に設定する
         </p>
 
-        {/* 🔥 ログインボタン */}
         <a
           href="/login"
           className="mt-4 inline-flex rounded-full bg-green-500 px-4 py-2 font-semibold text-black"
@@ -80,12 +94,10 @@ export default function PostPage() {
           onClick={search}
           className="mt-3 w-full rounded-2xl bg-green-500 py-3 font-semibold text-black"
         >
-          検索
+          {loading ? "検索中..." : "検索"}
         </button>
 
-        {error && (
-          <div className="mt-3 text-sm text-red-400">{error}</div>
-        )}
+        {error && <div className="mt-3 text-sm text-red-400">{error}</div>}
 
         <div className="mt-5 space-y-3">
           {results.map((track: any) => (
@@ -101,9 +113,7 @@ export default function PostPage() {
               />
 
               <div className="min-w-0 flex-1">
-                <div className="truncate font-semibold">
-                  {track.title}
-                </div>
+                <div className="truncate font-semibold">{track.title}</div>
                 <div className="truncate text-sm text-white/60">
                   {track.artist}
                 </div>

@@ -9,7 +9,7 @@ export type User = {
   id: string;
   username: string;
   avatar: string;
-  moodSong: Track;
+  moodSong: Track | null;
 };
 
 export type AppData = {
@@ -25,12 +25,7 @@ const defaultData: AppData = {
     id: "me",
     username: "You",
     avatar: "🎧",
-    moodSong: {
-      id: "1",
-      title: "言って。",
-      artist: "ヨルシカ",
-      coverUrl: "https://placehold.co/300x300",
-    },
+    moodSong: null,
   },
 
   friends: [
@@ -87,6 +82,7 @@ export function getAppData(): AppData {
   const raw = localStorage.getItem(STORAGE_KEY);
 
   if (!raw) {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(defaultData));
     return defaultData;
   }
 
