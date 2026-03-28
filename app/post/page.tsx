@@ -44,15 +44,35 @@ export default function PostPage() {
       }
 
       setResults(data);
-    } catch (e: any) {
+    } catch {
       setError("検索中にエラーが起きました");
     } finally {
       setLoading(false);
     }
   };
 
-  const setMoodSong = (track: any) => {
+  const chooseTrack = (track: any) => {
     const data = getAppData();
+    const editingIndexRaw = localStorage.getItem("editing_selected_index");
+
+    if (editingIndexRaw !== null) {
+      const index = Number(editingIndexRaw);
+
+      if (!Number.isNaN(index) && index >= 0 && index < 5) {
+        data.selectedBest5[index] = {
+          id: track.id,
+          title: track.title,
+          artist: track.artist,
+          coverUrl: track.coverUrl,
+        };
+
+        saveAppData(data);
+        localStorage.removeItem("editing_selected_index");
+        alert("選択ベスト5を更新しました");
+        window.location.href = "/profile";
+        return;
+      }
+    }
 
     data.me.moodSong = {
       id: track.id,
@@ -73,7 +93,7 @@ export default function PostPage() {
       <div className="mx-auto max-w-md px-4 pt-6">
         <h1 className="text-xl font-bold">曲を検索</h1>
         <p className="mt-2 text-sm text-white/60">
-          Spotifyから曲を探して、今の音楽に設定する
+          Spotifyから曲を探して設定
         </p>
 
         <a
@@ -103,7 +123,7 @@ export default function PostPage() {
           {results.map((track: any) => (
             <button
               key={track.id}
-              onClick={() => setMoodSong(track)}
+              onClick={() => chooseTrack(track)}
               className="flex w-full items-center gap-3 rounded-2xl border border-white/10 bg-[#151A22] p-3 text-left"
             >
               <img
